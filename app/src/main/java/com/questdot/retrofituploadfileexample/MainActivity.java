@@ -6,101 +6,101 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
+                import android.provider.MediaStore;
+                import android.support.design.widget.Snackbar;
+                import android.support.v7.app.AppCompatActivity;
+                import android.support.v7.widget.Toolbar;
+                import android.view.View;
+                import android.widget.Button;
+                import android.widget.ImageView;
+                import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+                import com.squareup.picasso.Picasso;
 
-import java.io.File;
+                import java.io.File;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+                import okhttp3.MediaType;
+                import okhttp3.MultipartBody;
+                import okhttp3.RequestBody;
+                import retrofit2.Call;
+                import retrofit2.Callback;
+                import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
-
-
-    ImageView imageView;
-    String imagePath;
-    Toolbar toolbar;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+                public class MainActivity extends AppCompatActivity {
 
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+                    ImageView imageView;
+                    String imagePath;
+                    Toolbar toolbar;
+
+                    @Override
+                    protected void onCreate(Bundle savedInstanceState) {
+                        super.onCreate(savedInstanceState);
+                        setContentView(R.layout.activity_main);
 
 
-        imageView = (ImageView) findViewById(R.id.imageView);
-
-        Button button = (Button) findViewById(R.id.fab);
-
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if(imagePath!=null)
-                        uploadImage();
-                else
-                    Toast.makeText(getApplicationContext(),"Please select image", Toast.LENGTH_LONG).show();
-
-            }
-        });
-    }
+                        toolbar = (Toolbar) findViewById(R.id.toolbar);
+                        setSupportActionBar(toolbar);
 
 
-    private void uploadImage() {
+                        imageView = (ImageView) findViewById(R.id.imageView);
 
-        final ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(MainActivity.this);
-        progressDialog.setMessage("loading...");
-        progressDialog.show();
+                        Button button = (Button) findViewById(R.id.fab);
 
-        FileApi service = RetroClient.getApiService();
 
-        File file = new File(imagePath);
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                                if(imagePath!=null)
+                                    uploadImage();
+                                else
+                                    Toast.makeText(getApplicationContext(),"Please select image", Toast.LENGTH_LONG).show();
 
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("uploaded_file", file.getName(), requestFile);
+                            }
+                        });
+                    }
 
-        Call<Respond> resultCall = service.uploadImage(body);
 
-        resultCall.enqueue(new Callback<Respond>() {
-            @Override
-            public void onResponse(Call<Respond> call, Response<Respond> response) {
+                    private void uploadImage() {
 
-                progressDialog.dismiss();
+                        final ProgressDialog progressDialog;
+                        progressDialog = new ProgressDialog(MainActivity.this);
+                        progressDialog.setMessage("loading...");
+                        progressDialog.show();
 
-                // Response Success or Fail
-                if (response.isSuccessful()) {
-                    if (response.body().getError()==true)
+                        FileApi service = RetroClient.getApiService();
 
-                        Toast.makeText(getApplicationContext(),response.body().getMessage(),Toast.LENGTH_LONG).show();
+                        File file = new File(imagePath);
 
-                    else
-                        Toast.makeText(getApplicationContext(),response.body().getMessage(),Toast.LENGTH_LONG).show();
+                        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
-                } else {
-                    Toast.makeText(getApplicationContext(),response.body().getMessage(),Toast.LENGTH_LONG).show();
-                }
+                        MultipartBody.Part body =
+                                MultipartBody.Part.createFormData("uploaded_file", file.getName(), requestFile);
 
-                imageView.setImageDrawable(null);
-                imagePath = null;
+                        Call<Respond> resultCall = service.uploadImage(body);
+
+                        resultCall.enqueue(new Callback<Respond>() {
+                            @Override
+                            public void onResponse(Call<Respond> call, Response<Respond> response) {
+
+                                progressDialog.dismiss();
+
+                                // Response Success or Fail
+                                if (response.isSuccessful()) {
+                                    if (response.body().getError()==true)
+
+                                        Toast.makeText(getApplicationContext(),response.body().getMessage(),Toast.LENGTH_LONG).show();
+
+                                    else
+                                        Toast.makeText(getApplicationContext(),response.body().getMessage(),Toast.LENGTH_LONG).show();
+
+                                } else {
+                                    Toast.makeText(getApplicationContext(),response.body().getMessage(),Toast.LENGTH_LONG).show();
+                                }
+
+                                imageView.setImageDrawable(null);
+                                imagePath = null;
 
             }
 
