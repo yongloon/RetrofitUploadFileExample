@@ -11,6 +11,6 @@ public interface FileApi {
 
 
     @Multipart
-    @POST("uploads.php")
+    @POST("upload.php")
     Call<Respond> uploadImage(@Part MultipartBody.Part file);
 }

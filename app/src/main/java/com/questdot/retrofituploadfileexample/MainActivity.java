@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
         MultipartBody.Part body =
-                MultipartBody.Part.createFormData("fileToUpload", file.getName(), requestFile);
+                MultipartBody.Part.createFormData("uploaded_file", file.getName(), requestFile);
 
         Call<Respond> resultCall = service.uploadImage(body);
 
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),response.body().getMessage(),Toast.LENGTH_LONG).show();
                 }
 
-
+                imageView.setImageDrawable(null);
                 imagePath = null;
 
             }
